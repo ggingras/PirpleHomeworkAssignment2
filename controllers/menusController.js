@@ -14,7 +14,7 @@ const getValidName = (str) => {
 }
 
 const getValidPrice = (nbr) => {
-    return (typeof nbr === 'number' && nbr > 0) ? nbr : false;
+    return (typeof nbr === 'string' && nbr > 0) ? nbr : false;
 }
 
 const handleError = (e) => {
