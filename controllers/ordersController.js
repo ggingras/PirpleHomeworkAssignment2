@@ -1,4 +1,9 @@
 
+/*
+ * No orders entity, append as a property to user entity
+ * 
+ * */
+
 const https = require('https');
 const queryString = require('querystring');
 const config = require('../config');

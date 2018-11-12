@@ -1,8 +1,8 @@
 /*
  * Toke entity {
- *    Id : primary key
- *    Email : required
- *    Expires : required
+ *    id : primary key
+ *    email : required
+ *    expires : required (auto calculated)
  * }
  * */
 
@@ -72,11 +72,10 @@ const tokenPost = async ({payload}) => {
 
 const tokenPut = async ({ payload, queryString }) => {
     const id = typeof payload.id === 'undefined' ? getId(queryString.id) : false;
-    const expires = (typeof payload.expires === 'number' && payload.expires.length > 0) ? payload.expires : false;
-    if (id && expires) {
+    if (id) {
       try {
         const token = await tokenRepository.read(id);
-        token.expires = expires || token.expires;
+        token.expires = Date.now() + 1000 * 60 * 60 * 24;
   
         await tokenRepository.update(id, token);
         return constructValidResponse(statusCode.ok, token);
@@ -88,19 +87,16 @@ const tokenPut = async ({ payload, queryString }) => {
     else if (!id && payload.id){
       return constructInvalidResponse(statusCode.badRequest, 'id cannot be updated');
     } 
-    else if (!id) {
-      return constructInvalidResponse(statusCode.badRequest, 'id in querystring is required');
-    } 
     else {
-      return constructInvalidResponse(statusCode.badRequest, 'Nothing to update');
-    }
+      return constructInvalidResponse(statusCode.badRequest, 'id in querystring is missing or invalid');
+    } 
   };
 
 const tokenDelete = async ({ queryString }) => {
     const id = getId(queryString.id);
     if (id) {
       try {
-        await tokenRepository.remove(id);
+        await tokenRepository.delete(id);
         return constructValidResponse(statusCode.ok);
       } 
       catch (e) {

@@ -1,3 +1,8 @@
+/*
+ * No carts entity, append as a property to user entity
+ * 
+ * */
+
 const { statusCode } = require('../lib/commons');
 const { constructValidResponse, constructInvalidResponse } = require('../lib/helpers');
 const repository = require('../lib/repository');
@@ -46,7 +51,7 @@ const cartPost = async ({ payload, headers }) => {
 
         items.push({itemId, count});
 
-        const updatedUser = {...user, cartItems: items, lastItemAddedAt: Date.now()};
+        const updatedUser = {...user, cartItems: items};
         await userRepository.update(token.email, updatedUser);
         delete updatedUser.password;
   
@@ -89,7 +94,7 @@ const cartPut = async ({payload, queryString, headers}) => {
       }
 
       if (itemUpdated) { 
-        const updatedUser = {...user, cartItems: items, lastItemAddedAt: Date.now()};
+        const updatedUser = {...user, cartItems: items};
         await userRepository.update(token.email, updatedUser);
         delete updatedUser.password;
 
@@ -131,7 +136,7 @@ const cartDelete = async ({ queryString, headers }) => {
       }
 
       if (itemUpdated) {
-        const updatedUser = {...user, cartItems: items, lastItemAddedAt: Date.now()};
+        const updatedUser = {...user, cartItems: items};
         await userRepository.update(token.email, updatedUser);
         delete updatedUser.password;
 

@@ -1,9 +1,12 @@
 /*
  * User entity {
- *    Email : primary key
- *    Address : required
+ *    email : primary key
+ *    address : required
  *    password : required and hash for security
  *    name : required
+ * 
+ *    cartItems : optional
+ *    orders : optional
  * }
  * */
 
@@ -47,7 +50,7 @@ const handleError = (e) => {
     }
 }
 
-const postUser = async ({payload}) => {
+const userPost = async ({payload}) => {
     const email = getValidEmail(payload.email);
     const address = getValidAddress(payload.address);
     const hashPassword = getHashPassword(payload.password);
@@ -110,7 +113,7 @@ const userPut = async ({ payload, queryString, headers }) => {
         return constructInvalidResponse(statusCode.badRequest, 'Email cannot be updated');
     } 
     else if (!email) {
-        return constructInvalidResponse(statusCode.badRequest, 'Email in querystring is required');
+        return constructInvalidResponse(statusCode.badRequest, 'Email in querystring is missing ot invalid');
     }
     else if (!tokenId) {
         return constructInvalidResponse(statusCode.forbidden, 'Unauthorized access');
@@ -174,7 +177,7 @@ const userGet = async ({ queryString, headers }) => {
 
 module.exports = {
     get: userGet,
-    post: postUser,
+    post: userPost,
     put: userPut,
     delete: userDelete
   };

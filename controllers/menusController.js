@@ -1,4 +1,12 @@
 
+/*
+ * Menu item entity {
+ *    id : primary key
+ *    price : required
+ *    name : required
+ * }
+ * */
+
 const { statusCode } = require('../lib/commons');
 const { constructValidResponse, constructInvalidResponse, makeRandomString } = require('../lib/helpers');
 const repository = require('../lib/repository');
@@ -14,7 +22,7 @@ const getValidName = (str) => {
 }
 
 const getValidPrice = (nbr) => {
-    return (typeof nbr === 'string' && nbr > 0) ? nbr : false;
+    return ( (typeof nbr === 'string' || typeof nbr === 'number') && nbr > 0) ? Number(nbr) : false;
 }
 
 const handleError = (e) => {
@@ -62,8 +70,8 @@ const menuPost = async ({ payload }) => {
 
 const menuPut = async ({ payload, queryString }) => {
     const id = typeof payload.id === 'undefined' ? getValidItemId(queryString.id) : false;
-    const price = getValidName(payload.price);
-    const name = getValidPrice(payload.name);
+    const price = getValidPrice(payload.price);
+    const name = getValidName(payload.name);
 
     if (id && (price || name)) {
       try {
@@ -83,7 +91,7 @@ const menuPut = async ({ payload, queryString }) => {
       return constructInvalidResponse(statusCode.badRequest, 'id cannot be updated');
     } 
     else if (!id) {
-      return constructInvalidResponse(statusCode.badRequest, 'id in querystring is required');
+      return constructInvalidResponse(statusCode.badRequest, 'id in querystring is missing or invalid');
     } 
     else {
       return constructInvalidResponse(statusCode.badRequest, 'Nothing to update');
